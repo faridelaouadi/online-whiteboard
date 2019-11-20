@@ -3,7 +3,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // state
     let draw = false;
-
     // elements
     let points = [];
     let lines = [];
@@ -13,8 +12,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // create the selection area
         svg = d3.select('#draw')
-                .attr('height', window.innerHeight)
-                .attr('width', window.innerWidth);
+                .attr('height', 0.9*(window.innerHeight - $( '#top_bar' ).height()))
+                .attr('width', 0.9*window.innerWidth);
 
         svg.on('mousedown', function() {
             draw = true;
