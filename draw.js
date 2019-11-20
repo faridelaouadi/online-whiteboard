@@ -48,7 +48,9 @@ document.addEventListener('DOMContentLoaded', () => {
     function draw_point(x, y, connect) {
 
         const color = document.querySelector('#color-picker').value;
-        const thickness = document.querySelector('#thickness-picker').value;
+        const thickness = $('#thickness_slider').data('slider').getValue()
+
+
 
         if (connect) {
             const last_point = points[points.length - 1];
@@ -87,6 +89,12 @@ document.addEventListener('DOMContentLoaded', () => {
         $('.collapse.in').toggleClass('in');
         $('a[aria-expanded=true]').attr('aria-expanded', 'false');
     });
+
+    $('#thickness_slider').slider({
+        formatter: function(value) {
+        return 'Current value: ' + value;
+        }
+        });
 
     render();
 });
