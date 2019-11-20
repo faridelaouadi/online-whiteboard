@@ -2,7 +2,7 @@
 body {
     font-family: 'Poppins', sans-serif;
     background: #fafafa;
-    
+
 }
 
 p {
@@ -209,4 +209,18 @@ a.article:hover {
   right: 25px;
   font-size: 36px;
   margin-left: 50px;
+}
+
+#msg-list {
+    height: 90%;
+    overflow: auto;
+    position:relative;
+    padding-top: 30px;
+    border-radius: 25px;
+    border: 1px solid white;
+    list-style-type: none;
+    list-style: none;
+    background-color: #bbdefb;
+    margin-right: 4px;
+    margin-left: 4px;
 }

@@ -99,7 +99,7 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 function openChat() {
-  document.getElementById("chatRoom").style.width = "350px";
+  document.getElementById("chatRoom").style.width = "50%";
 }
 
 function closeChat() {
