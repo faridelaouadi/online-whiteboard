@@ -97,3 +97,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
     render();
 });
+
+function openChat() {
+  document.getElementById("chatRoom").style.width = "350px";
+}
+
+function closeChat() {
+  document.getElementById("chatRoom").style.width = "0";
+}
