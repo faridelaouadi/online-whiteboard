@@ -19,24 +19,25 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
     <script src="https://d3js.org/d3.v4.min.js"></script>
     <script src="draw.js"></script>
-
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/spectrum/1.8.0/spectrum.min.js"></script>
-    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/spectrum/1.8.0/spectrum.min.css">
 </head>
 
 <body>
 
     <div class="wrapper">
-        <!-- Sidebar Holder -->
+        <!-- Sidebar  -->
         <nav id="sidebar">
+            <div id="dismiss">
+                <i class="fas fa-arrow-left"></i>
+            </div>
+
             <div class="sidebar-header">
                 <h3>Open Canvas</h3>
             </div>
 
             <ul class="list-unstyled components">
-                <p>Dummy Heading</p>
-                <li id="options">
-                  <select id="color-picker">
+                <li>
+                  <label for="color-picker">Colour:</label>
+                  <select class="form-control" id="color-picker">
                       <option value="black">Black</option>
                       <option value="red">Red</option>
                       <option value="blue">Blue</option>
@@ -44,7 +45,8 @@
                   </select>
                 </li>
                 <li>
-                  <select id="thickness-picker">
+                  <label for="thickness-picker">Thickness:</label>
+                  <select class="form-control" id="thickness-picker">
                       <option value=1>1</option>
                       <option value=2>2</option>
                       <option value=3 selected>3</option>
@@ -58,53 +60,47 @@
                   </select>
                 </li>
                 <li>
-                    <button id="erase">Erase</button>
+                    <button type="button" id="erase" class="btn btn-default" style="margin-top:5px;width:100%;">Erase</button>
                 </li>
             </ul>
+
         </nav>
 
-        <!-- Page Content Holder -->
+        <!-- Page Content  -->
         <div id="content">
 
-          <nav class="navbar navbar-expand-lg navbar-light bg-light">
-              <div class="container-fluid">
+            <nav class="navbar navbar-expand-lg navbar-light bg-light">
+                <div class="container-fluid">
 
-                  <button type="button" id="sidebarCollapse" class="navbar-btn">
-                      <span></span>
-                      <span></span>
-                      <span></span>
-                  </button>
-                  <button class="btn btn-dark d-inline-block d-lg-none ml-auto" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-                      <i class="fas fa-align-justify"></i>
-                  </button>
+                    <button type="button" id="sidebarCollapse" class="btn btn-info">
+                        <i class="fas fa-palette"></i>
+                        <span>Open Palette</span>
+                    </button>
+                    <button class="btn btn-dark d-inline-block d-lg-none ml-auto" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                        <i class="fas fa-align-justify"></i>
+                    </button>
 
-                  <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                      <ul class="nav navbar-nav ml-auto">
-                          <li class="nav-item">
-                              <a class="nav-link" href="#">Save Masterpiece</a>
-                          </li>
-                          <li class="nav-item">
-                              <a class="nav-link" href="#">Open Chat</a>
-                          </li>
-                          <li class="nav-item">
-                              <a class="nav-link" href="#">Page</a>
-                          </li>
-                          <li class="nav-item">
-                              <a class="nav-link" href="#">Page</a>
-                          </li>
-                      </ul>
-                  </div>
-              </div>
-          </nav>
-          <div style="border: 1px solid">
-            <svg id="draw" width="50px" height="50px">
-            </svg>
-          </div>
-          <!--
-          <svg id="draw" width="100">
-          </svg>-->
-        </div>
+                    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                        <ul class="nav navbar-nav ml-auto">
+                            <li class="nav-item">
+                                <a class="nav-link" href="#">Save Masterpiece</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="#">Open Chat</a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </nav>
+            <div style="border: 1px solid; width:100%; height:100%;">
+              <svg id="draw">
+              </svg>
+            </div>
+
+            </div>
     </div>
+
+    <div class="overlay"></div>
 
     <!-- jQuery CDN - Slim version (=without AJAX) -->
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
@@ -112,15 +108,8 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js" integrity="sha384-cs/chFZiN24E4KMATLdqdvsezGxaGsi4hLGOzlXwp5UZB1LY//20VyM2taTB4QvJ" crossorigin="anonymous"></script>
     <!-- Bootstrap JS -->
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js" integrity="sha384-uefMccjFJAIv6A+rW+L4AHf99KvxDjWSu1z9VI8SKNVmz4sk7buKt/6v9KI65qnm" crossorigin="anonymous"></script>
-
-    <script type="text/javascript">
-        $(document).ready(function () {
-            $('#sidebarCollapse').on('click', function () {
-                $('#sidebar').toggleClass('active');
-                $(this).toggleClass('active');
-            });
-        });
-    </script>
+    <!-- jQuery Custom Scroller CDN -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/malihu-custom-scrollbar-plugin/3.1.5/jquery.mCustomScrollbar.concat.min.js"></script>
 </body>
 
 </html>

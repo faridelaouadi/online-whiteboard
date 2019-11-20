@@ -1,3 +1,4 @@
+
 document.addEventListener('DOMContentLoaded', () => {
 
     // state
@@ -39,6 +40,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 lines[i].remove();
             points = [];
             lines = [];
+            close_sidebar();
         }
 
     }
@@ -67,6 +69,24 @@ document.addEventListener('DOMContentLoaded', () => {
                          .style('fill', color);
         points.push(point);
     }
+
+    function close_sidebar() {
+        $('#sidebar').removeClass('active');
+        $('.overlay').removeClass('active');
+    };
+
+    $("#sidebar").mCustomScrollbar({
+        theme: "minimal"
+    });
+
+    $('#dismiss, .overlay').on('click', close_sidebar);
+
+    $('#sidebarCollapse').on('click', function () {
+        $('#sidebar').addClass('active');
+        $('.overlay').addClass('active');
+        $('.collapse.in').toggleClass('in');
+        $('a[aria-expanded=true]').attr('aria-expanded', 'false');
+    });
 
     render();
 });
