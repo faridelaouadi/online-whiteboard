@@ -2,6 +2,8 @@ document.addEventListener("DOMContentLoaded", () => {
   get_username(); //when the user first logs in, they are prompted to enter their username
 });
 
+var socket;
+
 let bootstrap_colours = ["primary","secondary", "success", "danger", "warning", "info"];
 
 const init = username => {
@@ -28,9 +30,19 @@ const init = username => {
         if (name !== localStorage.getItem("username")){
           show_user_in_list(name);
         }
-
       }
     });
+
+
+
+    socket.on("new paint", data => {
+      //see how youre going to do the color and thickeness
+      if (data.username !== localStorage.getItem("username")){
+        draw_point(data.x,data.y,data.connect)
+      }
+
+    })
+
   });
 
   function show_user_in_list(name){

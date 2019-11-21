@@ -110,10 +110,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
     }
 
-    function draw_point(x, y, connect) {
+
+    window.draw_point = function draw_point(x, y, connect) {
+
 
         const color = document.querySelector('#color-picker').value;
         const thickness = $('#thickness_slider').data('slider').getValue()
+        socket.emit("new action", { username:localStorage.getItem("username"), x:x, y:y, connect:connect, color:color, thickness:thickness });
 
 
 
