@@ -8,9 +8,11 @@ document.addEventListener('DOMContentLoaded', () => {
     let lines = [];
     let svg = null;
     let actions = []; //this is a list of all the actions done by the user wrt drawing, point or line to help with undo function
-    let line_start = [] //array of lines indices where the user started drawing lines
+    let line_start = []; //array of lines indices where the user started drawing lines
+    let point_start_of_line = [];
 
-    let redo_stack = [];
+    let line_end = [];
+    let point_end_of_line = [];
 
     function render() {
 
@@ -30,6 +32,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
         svg.on('mouseup', () =>{
             draw = false; //if the mouse is up
+            if (line_start.length !== line_end.length){
+              line_end.push(lines.length - 1);
+              point_end_of_line.push(points.length -1);
+              // so if we have reached the end pf the line and the user stops drawing, we need to note which line and point this is in the index of the lines and points array.
+            }
         });
 
         //if the user is moving the mouse
@@ -42,6 +49,7 @@ document.addEventListener('DOMContentLoaded', () => {
             if (actions[actions.length -1] !== "line"){
               //they just started drawing the line
               line_start.push(lines.length - 1) // get the index of lines where the line starts
+              point_start_of_line.push(points.length - 1)
             }
             const coords = d3.mouse(this); //get the mouse coordinates
             actions.push("line");
@@ -69,12 +77,23 @@ document.addEventListener('DOMContentLoaded', () => {
             //remove the most recent point
           }else{
             //it is a line, we want to pop off from
-            for (let i = line_start[line_start.length - 1]; i < lines.length; i++){
+            for (let i = line_start[line_start.length - 1]; i < line_end[line_end.length - 1]; i++){
               lines[lines.length - 1].remove();
               lines.pop();
               actions.pop(); //remove last action done by the user
             }
             line_start.pop(); //the last stroke has now been removed
+            line_end.pop();
+            //remove all the lines associated with that stroke.
+
+            for (let i = point_start_of_line[point_start_of_line.length - 1]; i < point_end_of_line[point_end_of_line.length - 1]+1; i++){
+              points[points.length - 1].remove();
+              points.pop();
+              actions.pop(); //remove last action done by the user
+            }
+            point_start_of_line.pop(); //the last stroke has now been removed
+            point_end_of_line.pop();
+
           }
 
 
@@ -99,6 +118,7 @@ document.addEventListener('DOMContentLoaded', () => {
                             .attr('stroke-width', thickness * 2)
                             .style('stroke', color);
             lines.push(line);
+
         }
 
         const point = svg.append('circle')
