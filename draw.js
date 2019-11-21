@@ -72,8 +72,10 @@ document.addEventListener('DOMContentLoaded', () => {
         document.querySelector('#undo').onclick = () => {
           let most_recent_action = actions[actions.length-1]; //retrive last action
           if (most_recent_action === "point"){
+
             points[points.length - 1].remove();
             points.pop();
+            actions.pop()
             //remove the most recent point
           }else{
             //it is a line, we want to pop off from
@@ -89,14 +91,14 @@ document.addEventListener('DOMContentLoaded', () => {
             for (let i = point_start_of_line[point_start_of_line.length - 1]; i < point_end_of_line[point_end_of_line.length - 1]+1; i++){
               points[points.length - 1].remove();
               points.pop();
-              actions.pop(); //remove last action done by the user
+              //actions.pop(); //remove last action done by the user
             }
             point_start_of_line.pop(); //the last stroke has now been removed
             point_end_of_line.pop();
 
           }
 
-
+          console.log("After the undo the actions is now --> " + actions)
         }
 
     }
@@ -125,7 +127,7 @@ document.addEventListener('DOMContentLoaded', () => {
                          .attr('cx', x)
                          .attr('cy', y)
                          .attr('r', thickness)
-                         .style('fill', "red");
+                         .style('fill', color);
         points.push(point);
     }
 
