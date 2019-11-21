@@ -13,8 +13,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
     let line_end = [];
     let point_end_of_line = [];
+    var color;
+    var thickness;
 
     function render() {
+
 
         // create the selection area
         svg = d3.select('#draw')
@@ -26,7 +29,10 @@ document.addEventListener('DOMContentLoaded', () => {
             draw = true;
             const coords = d3.mouse(this); //get the coordinates of the mouse
             actions.push("point");
-            draw_point(coords[0], coords[1], false); //draw the point
+            color = document.querySelector('#color-picker').value;
+            thickness = $('#thickness_slider').data('slider').getValue()
+            socket.emit("new action", { username:localStorage.getItem("username"), x:coords[0], y:coords[1], connect:false, color:color, thickness:thickness});
+            draw_point(coords[0], coords[1], false, color, thickness); //draw the point
         });
 
 
@@ -53,25 +59,18 @@ document.addEventListener('DOMContentLoaded', () => {
             }
             const coords = d3.mouse(this); //get the mouse coordinates
             actions.push("line");
-            draw_point(coords[0], coords[1], true);
+            color = document.querySelector('#color-picker').value;
+            thickness = $('#thickness_slider').data('slider').getValue()
+            socket.emit("new action", { username:localStorage.getItem("username"), x:coords[0], y:coords[1], connect:true, color:color, thickness:thickness});
+            draw_point(coords[0], coords[1], true, color, thickness);
             //draw a point that is connected to the previous point
             //we have to do it like this because we cant edit the number of times the getMousePosition event fires
         });
 
         document.querySelector('#erase').onclick = () => {
-            for (let i = 0; i < points.length; i++)
-                points[i].remove();
-            for (let i = 0; i < lines.length; i++)
-                lines[i].remove();
-            points = [];
-            lines = [];
-            actions = []; //this is a list of all the actions done by the user wrt drawing, point or line to help with undo function
-            line_start = []; //array of lines indices where the user started drawing lines
-            point_start_of_line = [];
-            line_end = [];
-            point_end_of_line = [];
-            //we cant just assign them empty lists,we must do the for loop to remove all the SVG objects we have created
-            close_sidebar();
+          clear_canvas();
+          socket.emit("clear canvas");
+
         }
 
         document.querySelector('#undo').onclick = () => {
@@ -111,14 +110,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
 
-    window.draw_point = function draw_point(x, y, connect) {
-
-
-        const color = document.querySelector('#color-picker').value;
-        const thickness = $('#thickness_slider').data('slider').getValue()
-        socket.emit("new action", { username:localStorage.getItem("username"), x:x, y:y, connect:connect, color:color, thickness:thickness });
-
-
+    window.draw_point = function draw_point(x, y, connect, color, thickness) {
 
         if (connect) {
             const last_point = points[points.length - 1];
@@ -140,6 +132,27 @@ document.addEventListener('DOMContentLoaded', () => {
                          .style('fill', color);
         points.push(point);
     }
+
+
+
+    window.clear_canvas = function clear_canvas(){
+      console.log("we are clearinh the canvas now boss");
+      for (let i = 0; i < points.length; i++)
+          points[i].remove();
+      for (let i = 0; i < lines.length; i++)
+          lines[i].remove();
+      points = [];
+      lines = [];
+      actions = []; //this is a list of all the actions done by the user wrt drawing, point or line to help with undo function
+      line_start = []; //array of lines indices where the user started drawing lines
+      point_start_of_line = [];
+      line_end = [];
+      point_end_of_line = [];
+      socket.emit("clear canvas");
+      //we cant just assign them empty lists,we must do the for loop to remove all the SVG objects we have created
+      close_sidebar();
+    }
+
 
     function close_sidebar() {
         $('#sidebar').removeClass('active');
