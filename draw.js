@@ -65,6 +65,11 @@ document.addEventListener('DOMContentLoaded', () => {
                 lines[i].remove();
             points = [];
             lines = [];
+            actions = []; //this is a list of all the actions done by the user wrt drawing, point or line to help with undo function
+            line_start = []; //array of lines indices where the user started drawing lines
+            point_start_of_line = [];
+            line_end = [];
+            point_end_of_line = [];
             //we cant just assign them empty lists,we must do the for loop to remove all the SVG objects we have created
             close_sidebar();
         }
@@ -91,14 +96,10 @@ document.addEventListener('DOMContentLoaded', () => {
             for (let i = point_start_of_line[point_start_of_line.length - 1]; i < point_end_of_line[point_end_of_line.length - 1]+1; i++){
               points[points.length - 1].remove();
               points.pop();
-              //actions.pop(); //remove last action done by the user
             }
             point_start_of_line.pop(); //the last stroke has now been removed
             point_end_of_line.pop();
-
           }
-
-          console.log("After the undo the actions is now --> " + actions)
         }
 
     }
