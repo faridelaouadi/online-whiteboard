@@ -15,14 +15,29 @@ const init = username => {
   socket.on("connect", () => {
 
     socket.emit("userdata", { username }); // let the server know what the user's name is
+    socket.emit("get users");
 
     socket.on("new user", data => {
-        var colour = bootstrap_colours[Math.floor(Math.random()*bootstrap_colours.length)];
-        $("#active_users_list").append( `<span class=\"badge badge-pill badge-${colour}\">${data.username}</span>`); //this line isnt working
+        show_user_in_list(data.username)
         console.log("new user called " + data.username + " has just joined the server");
+    });
 
+
+    socket.on("users", data => {
+      for (let name of data) {
+        if (name !== localStorage.getItem("username")){
+          show_user_in_list(name);
+        }
+
+      }
     });
   });
+
+  function show_user_in_list(name){
+    var colour = bootstrap_colours[Math.floor(Math.random()*bootstrap_colours.length)];
+    $("#active_users_list").append( `<span class=\"badge badge-pill badge-${colour}\">${name}</span>`);
+  }
+
 };
 
 
