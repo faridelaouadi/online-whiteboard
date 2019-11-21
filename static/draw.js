@@ -75,31 +75,37 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         document.querySelector('#undo').onclick = () => {
-          let most_recent_action = actions[actions.length-1]; //retrive last action
-          if (most_recent_action === "point"){
-
-            points[points.length - 1].remove();
-            points.pop();
-            actions.pop()
-            //remove the most recent point
+          if (actions.length == 0){
+            console.log("lets display the notif now")
+            //$('#undo_notif').show();
           }else{
-            //it is a line, we want to pop off from
-            for (let i = line_start[line_start.length - 1]; i < line_end[line_end.length - 1]; i++){
-              lines[lines.length - 1].remove();
-              lines.pop();
-              actions.pop(); //remove last action done by the user
-            }
-            line_start.pop(); //the last stroke has now been removed
-            line_end.pop();
-            //remove all the lines associated with that stroke.
+            let most_recent_action = actions[actions.length-1]; //retrive last action
+            if (most_recent_action === "point"){
 
-            for (let i = point_start_of_line[point_start_of_line.length - 1]; i < point_end_of_line[point_end_of_line.length - 1]+1; i++){
               points[points.length - 1].remove();
               points.pop();
+              actions.pop()
+              //remove the most recent point
+            }else{
+              //it is a line, we want to pop off from
+              for (let i = line_start[line_start.length - 1]; i < line_end[line_end.length - 1]; i++){
+                lines[lines.length - 1].remove();
+                lines.pop();
+                actions.pop(); //remove last action done by the user
+              }
+              line_start.pop(); //the last stroke has now been removed
+              line_end.pop();
+              //remove all the lines associated with that stroke.
+
+              for (let i = point_start_of_line[point_start_of_line.length - 1]; i < point_end_of_line[point_end_of_line.length - 1]+1; i++){
+                points[points.length - 1].remove();
+                points.pop();
+              }
+              point_start_of_line.pop(); //the last stroke has now been removed
+              point_end_of_line.pop();
             }
-            point_start_of_line.pop(); //the last stroke has now been removed
-            point_end_of_line.pop();
           }
+
         }
 
     }
