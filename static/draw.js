@@ -162,13 +162,14 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         });
 
+    $("#active_users_list_button").on('click',function(){
+      if ($('#active_users_list').css("display") === "none"){
+        $('#active_users_list').css("display","inline");
+      }else{
+        $('#active_users_list').css("display","none");
+      }
+
+    });
+
     render();
 });
-
-function openChat() {
-  document.getElementById("chatRoom").style.width = "50%";
-}
-
-function closeChat() {
-  document.getElementById("chatRoom").style.width = "0";
-}

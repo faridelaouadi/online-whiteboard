@@ -2,6 +2,8 @@ document.addEventListener("DOMContentLoaded", () => {
   get_username(); //when the user first logs in, they are prompted to enter their username
 });
 
+let bootstrap_colours = ["primary","secondary", "success", "danger", "warning", "info"];
+
 const init = username => {
 
   //after the username is entered, lets start the socket
@@ -15,6 +17,8 @@ const init = username => {
     socket.emit("userdata", { username }); // let the server know what the user's name is
 
     socket.on("new user", data => {
+        var colour = bootstrap_colours[Math.floor(Math.random()*bootstrap_colours.length)];
+        $("#active_users_list").append( `<span class=\"badge badge-pill badge-${colour}\">${data.username}</span>`); //this line isnt working
         console.log("new user called " + data.username + " has just joined the server");
 
     });
@@ -55,6 +59,8 @@ const get_username = () => {
 
           $("#usernameModal").modal("hide");
           //set the username in local storage to make it like sessions
+
+
           init(username);
           //call the init function to start the app
         }
@@ -64,3 +70,11 @@ const get_username = () => {
     init(username);
   };
 };
+
+function openChat() {
+  document.getElementById("chatRoom").style.width = "50%";
+}
+
+function closeChat() {
+  document.getElementById("chatRoom").style.width = "0";
+}

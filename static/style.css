@@ -224,3 +224,11 @@ a.article:hover {
     margin-right: 4px;
     margin-left: 4px;
 }
+
+/* ---------------------------------------------------
+    Active Users list STYLE
+----------------------------------------------------- */
+
+#active_users_list {
+  display:none
+}
