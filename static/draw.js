@@ -66,8 +66,9 @@ document.addEventListener('DOMContentLoaded', () => {
         });
 
         document.querySelector('#erase').onclick = () => {
-          clear_canvas();
           socket.emit("clear canvas");
+          clear_canvas();
+
 
         }
 
@@ -121,7 +122,6 @@ document.addEventListener('DOMContentLoaded', () => {
       point_start_of_line = [];
       line_end = [];
       point_end_of_line = [];
-      socket.emit("clear canvas");
       //we cant just assign them empty lists,we must do the for loop to remove all the SVG objects we have created
       close_sidebar();
     }
@@ -133,7 +133,6 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     window.undo = function undo(){
-      console.log("We are undo ing!!!")
       let most_recent_action = actions[actions.length-1]; //retrive last action
       if (most_recent_action === "point"){
         points[points.length - 1].remove();
