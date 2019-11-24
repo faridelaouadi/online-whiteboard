@@ -1,4 +1,4 @@
-# Open Canvas Club
+# Online Collab whiteboard
 
 Project description
 ----
@@ -19,7 +19,7 @@ Export whiteboards as PNG that they can later edit
 Edit PDFs
 Zoom out of canvas
 
-Similar Startups 
+Similar Startups
 ---
 
 https://zapier.com/blog/best-online-whiteboard/
