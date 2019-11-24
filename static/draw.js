@@ -28,11 +28,10 @@ document.addEventListener('DOMContentLoaded', () => {
         svg.on('mousedown', function() {
             draw = true;
             const coords = d3.mouse(this); //get the coordinates of the mouse
-            actions.push("point");
             color = document.querySelector('#color-picker').value;
             thickness = $('#thickness_slider').data('slider').getValue()
-            socket.emit("new action", { username:localStorage.getItem("username"), x:coords[0], y:coords[1], connect:false, color:color, thickness:thickness});
-            draw_point(coords[0], coords[1], false, color, thickness); //draw the point
+            socket.emit("new action", { username:localStorage.getItem("username"), x:coords[0], y:coords[1], connect:false, color:color, thickness:thickness, action:"point"});
+            draw_point(coords[0], coords[1], false, color, thickness, "point"); //draw the point
         });
 
 
@@ -58,11 +57,10 @@ document.addEventListener('DOMContentLoaded', () => {
               point_start_of_line.push(points.length - 1)
             }
             const coords = d3.mouse(this); //get the mouse coordinates
-            actions.push("line");
             color = document.querySelector('#color-picker').value;
             thickness = $('#thickness_slider').data('slider').getValue()
-            socket.emit("new action", { username:localStorage.getItem("username"), x:coords[0], y:coords[1], connect:true, color:color, thickness:thickness});
-            draw_point(coords[0], coords[1], true, color, thickness);
+            socket.emit("new action", { username:localStorage.getItem("username"), x:coords[0], y:coords[1], connect:true, color:color, thickness:thickness, action:"line"});
+            draw_point(coords[0], coords[1], true, color, thickness, "line");
             //draw a point that is connected to the previous point
             //we have to do it like this because we cant edit the number of times the getMousePosition event fires
         });
@@ -78,31 +76,7 @@ document.addEventListener('DOMContentLoaded', () => {
             console.log("lets display the notif now")
             //$('#undo_notif').show();
           }else{
-            let most_recent_action = actions[actions.length-1]; //retrive last action
-            if (most_recent_action === "point"){
-
-              points[points.length - 1].remove();
-              points.pop();
-              actions.pop()
-              //remove the most recent point
-            }else{
-              //it is a line, we want to pop off from
-              for (let i = line_start[line_start.length - 1]; i < line_end[line_end.length - 1]; i++){
-                lines[lines.length - 1].remove();
-                lines.pop();
-                actions.pop(); //remove last action done by the user
-              }
-              line_start.pop(); //the last stroke has now been removed
-              line_end.pop();
-              //remove all the lines associated with that stroke.
-
-              for (let i = point_start_of_line[point_start_of_line.length - 1]; i < point_end_of_line[point_end_of_line.length - 1]+1; i++){
-                points[points.length - 1].remove();
-                points.pop();
-              }
-              point_start_of_line.pop(); //the last stroke has now been removed
-              point_end_of_line.pop();
-            }
+            socket.emit("undo");
           }
 
         }
@@ -110,8 +84,8 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
 
-    window.draw_point = function draw_point(x, y, connect, color, thickness) {
-
+    window.draw_point = function draw_point(x, y, connect, color, thickness, action) {
+        actions.push(action);
         if (connect) {
             const last_point = points[points.length - 1];
             const line = svg.append('line')
@@ -158,6 +132,33 @@ document.addEventListener('DOMContentLoaded', () => {
         $('#sidebar').removeClass('active');
         $('.overlay').removeClass('active');
     };
+
+    window.undo = function undo(){
+      let most_recent_action = actions[actions.length-1]; //retrive last action
+      if (most_recent_action === "point"){
+        points[points.length - 1].remove();
+        points.pop();
+        actions.pop()
+        //remove the most recent point
+      }else{
+        //it is a line, we want to pop off from
+        for (let i = line_start[line_start.length - 1]; i < line_end[line_end.length - 1]; i++){
+          lines[lines.length - 1].remove();
+          lines.pop();
+          actions.pop(); //remove last action done by the user
+        }
+        line_start.pop(); //the last stroke has now been removed
+        line_end.pop();
+        //remove all the lines associated with that stroke.
+
+        for (let i = point_start_of_line[point_start_of_line.length - 1]; i < point_end_of_line[point_end_of_line.length - 1]+1; i++){
+          points[points.length - 1].remove();
+          points.pop();
+        }
+        point_start_of_line.pop();
+        point_end_of_line.pop();
+      }
+    }
 
     $("#sidebar").mCustomScrollbar({
         theme: "minimal"

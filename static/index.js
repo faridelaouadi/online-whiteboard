@@ -34,11 +34,10 @@ const init = username => {
     });
 
 
-
     socket.on("new paint", data => {
       //see how youre going to do the color and thickeness
       if (data.username !== localStorage.getItem("username")){
-        draw_point(data.x,data.y,data.connect, data.color, data.thickness);
+        draw_point(data.x,data.y,data.connect, data.color, data.thickness, data.action);
       }
     })
 
@@ -46,6 +45,13 @@ const init = username => {
       //see how youre going to do the color and thickeness
       clear_canvas();
     })
+
+    socket.on("undo", () => {
+      //see how youre going to do the color and thickeness
+      undo();
+    })
+
+
 
 
   });

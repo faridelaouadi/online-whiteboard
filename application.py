@@ -1,7 +1,7 @@
 import os
 
 from flask import Flask, render_template, request
-from flask_socketio import SocketIO, emit
+from flask_socketio import SocketIO, emit, join_room , leave_room
 
 app = Flask(__name__)
 app.config["SECRET_KEY"] = os.getenv("SECRET_KEY")
@@ -31,6 +31,10 @@ def clear_canvas():
 @socketio.on('get users')
 def get_users():
     emit('users', list(USERS.keys()))
+
+@socketio.on('undo')
+def undo():
+    emit('undo', broadcast=True)
 
 
 
