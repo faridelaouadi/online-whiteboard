@@ -110,7 +110,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
     window.clear_canvas = function clear_canvas(){
-      console.log("we are clearinh the canvas now boss");
       for (let i = 0; i < points.length; i++)
           points[i].remove();
       for (let i = 0; i < lines.length; i++)
@@ -134,6 +133,7 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     window.undo = function undo(){
+      console.log("We are undo ing!!!")
       let most_recent_action = actions[actions.length-1]; //retrive last action
       if (most_recent_action === "point"){
         points[points.length - 1].remove();
