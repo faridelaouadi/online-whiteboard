@@ -21,11 +21,11 @@ const init = (username,room_id) => {
 
     socket.on("new user", data => {
         show_user_in_list(data.username)
-        console.log("new user called " + data.username + " has just joined the server");
     });
 
-
     socket.on("users", data => {
+      clear_users();
+      console.log("this is the list of people in the room from the server ---> "+ data)
       for (let name of data) {
         if (name !== localStorage.getItem("username")){
           show_user_in_list(name);
@@ -145,3 +145,8 @@ function closeChat() {
 function create_room(){
   console.log("We are now creating your new room!!!");
 }
+
+const clear_users = () => {
+  let ul = document.querySelector("#active_users_list");
+  ul.innerHTML = "";
+};

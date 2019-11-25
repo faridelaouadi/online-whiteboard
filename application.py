@@ -8,6 +8,7 @@ app.config["SECRET_KEY"] = os.getenv("SECRET_KEY")
 socketio = SocketIO(app)
 
 USERS = {} #this will be a dictionary of the following pairs :::: {socket_id : [username,room_id]}
+USER_SOCKET_MAPPING = {}
 
 
 @app.route("/")#we will make the url extension have the random hex number
@@ -20,7 +21,11 @@ def user_data(data):
     if 'username' in data:
         username = data['username']
         room = data['room_id']
-        USERS[request.sid] = [username,room] #request socket ID
+        USERS[request.sid] = [username,room] #new socket assigned to the user
+        #lets remove the old one and then assign the new one to the user sockeyt mappung
+        if username in USER_SOCKET_MAPPING:
+            del USERS[USER_SOCKET_MAPPING[username]]
+        USER_SOCKET_MAPPING[username] = request.sid
         join_room(room) #the user joins the room
         emit('new user', data, room=room)
 
@@ -38,7 +43,7 @@ def clear_canvas():
 @socketio.on('get users')
 def get_users():
     room = USERS[request.sid][1]
-    users = [USERS[request.sid][0]]
+    users = []
     for key in USERS:
         if room == USERS[key][1]:
             users.append(USERS[key][0])
