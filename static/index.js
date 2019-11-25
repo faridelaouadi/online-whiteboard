@@ -64,7 +64,7 @@ const init = (username,room_id) => {
 };
 
 
-
+//function to get the room_id from the user through using a modal
 const get_session_room = () => {
   let room_id = localStorage.getItem("room_id");
 
@@ -93,10 +93,7 @@ const get_session_room = () => {
   }else{
     init(username,room_id);
   }
-  }
 };
-
-
 
 
 //function to get the username from the user through using a modal
