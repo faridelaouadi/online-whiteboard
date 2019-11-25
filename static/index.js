@@ -270,6 +270,7 @@ const clear_users = () => {
 function leaveRoom(){
   localStorage.removeItem("room_id");
   clear_canvas();
+  document.querySelector("#msg-list").innerHTML = "";
   socket.emit("leave room");
   get_session_room()
 }
