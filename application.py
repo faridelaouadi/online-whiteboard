@@ -29,7 +29,6 @@ def user_data(data):
             USER_SOCKET_MAPPING[username] = request.sid
         USERS[request.sid] = [username,room] #new socket assigned to the user
         join_room(room) #the user joins the room
-        print(f"Users in the system are ::::::::: {USERS}")
         emit('new user', data, room=room)
 
 @socketio.on('new action')
@@ -62,6 +61,12 @@ def exit_room():
     room = USERS[request.sid][1]
     leave_room(room) #user has now left the room
     emit('user left' , room=room)
+
+@socketio.on('new msg')
+def new_msg(data):
+    room = USERS[request.sid][1]
+    #data['username'] is the username of the person who sent the message
+    emit('msg', data, room=room)
 
 
 if __name__ == "__main__":

@@ -20,8 +20,17 @@ const init = (username,room_id) => {
     socket.emit("userdata", { username,room_id }); // let the server know what the user's name is
     socket.emit("get users");
 
+    setup(socket,username,room_id);
+
     socket.on("new user", data => {
         show_user_in_list(data.username)
+    });
+
+    socket.on("msg", data => {
+      let username = data["username"];
+      let msg = data["msg"];
+      show_msg(username,msg,data["type_of_message"])
+
     });
 
     socket.on("user left", () => {
@@ -67,17 +76,88 @@ const init = (username,room_id) => {
 
 };
 
+const setup = (socket,username,room_id) => {
+  let msg_inp = document.querySelector("#msg-text");
+  let msg_form = document.querySelector("#msg-form");
+
+  msg_form.addEventListener("submit", e => {
+    console.log("the form was submitted")
+    // no reloading
+    e.preventDefault();
+
+    let msg = msg_inp.value; //this is what the user has entered as a message
+
+    socket.emit("new msg", {
+      msg,
+      room_id:room_id,
+      username: username,
+      type_of_message:"message"
+    });//send the message data to the socket
+
+    msg_inp.value = "";
+  });
+}
+
+const show_msg = (username,msg,type_of_message) => {
+  let ul = document.querySelector("#msg-list");
+  let li = document.createElement("li");
+
+  if (localStorage.getItem("username") === username){
+    //if i sent the message
+    li.classList.add("list-group-me");
+    switch (type_of_message){
+      case "message":{
+        li.innerHTML = `<strong class="d-flex justify-content-end">${
+          msg
+        } </strong>`
+        break;
+      }
+      case "gif":{
+        li.innerHTML = `<img style="width:100%;"src=${msg} alt="A GIF">`
+        break;
+      }
+      default:
+      console.log("there was an error displaying your message")
+
+    }
+
+  }else{
+    //if the message is from someone else.
+    li.classList.add("list-group-sender");
+    switch (type_of_message){
+      case "message":{
+        li.innerHTML = `<strong>${username}</strong>: ${
+          msg
+        }`;
+        break;
+      }
+      case "gif":{
+        li.innerHTML = `<strong>${username}</strong><img style="display:block;width:100%;"src=${msg} alt="A GIF">`;
+        break;
+      }
+      default:
+      console.log("there was an error displaying their message")
+    }
+
+  }
+
+  ul.appendChild(li);
+  // scroll msg-list
+  ul.scrollTop = ul.scrollHeight - ul.clientHeight;
+
+};
+
 function create_room(){
   //  random hex string generator of length 16 chars
   let room_id = randHex(16);
   let username = localStorage.getItem("username");
   localStorage.setItem("room_id", room_id);
   try {
-    document.getElementById('navbar_header').innerHTML = "Room "+ room_id;
+    document.getElementById('navbar_header').innerHTML = "Room ID: "+ room_id;
     socket.emit("userdata", { username,room_id })
   }
   catch(err) {
-    document.getElementById('navbar_header').innerHTML = "Room "+ room_id;
+    document.getElementById('navbar_header').innerHTML = "Room ID: "+ room_id;
     init(username,room_id);
   }
 }
@@ -106,11 +186,11 @@ const get_session_room = () => {
             localStorage.setItem("room_id", room_id);
             $("#room_id_Modal").modal("hide");
             try {
-              document.getElementById('navbar_header').innerHTML = "Room "+ room_id;
+              document.getElementById('navbar_header').innerHTML = "Room ID: "+ room_id;
               socket.emit("userdata", { username,room_id })
             }
             catch(err) {
-              document.getElementById('navbar_header').innerHTML = "Room "+ room_id;
+              document.getElementById('navbar_header').innerHTML = "Room ID: "+ room_id;
               init(username,room_id);
             }
           }
@@ -118,7 +198,7 @@ const get_session_room = () => {
       });
   }else{
     //the user will not reach here if they have left a room.
-    document.getElementById('navbar_header').innerHTML = "Room "+ room_id;
+    document.getElementById('navbar_header').innerHTML = "Room ID: "+ room_id;
     init(username,room_id);
   }
 };

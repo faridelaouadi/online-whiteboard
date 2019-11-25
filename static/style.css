@@ -225,6 +225,46 @@ a.article:hover {
     margin-left: 4px;
 }
 
+
+.list-group-me:hover {
+  background-color: #60AFFE;
+}
+
+.list-group-me {
+    position: relative;
+    margin-right: 10px;
+    margin-left:auto;
+    margin-bottom: 10px;
+    padding: 10px;
+    background-color: #A8DDFD;
+    width: 50%;
+    height: auto;
+    text-align: left;
+    font: 400 .9em 'Open Sans', sans-serif;
+    border: 1px solid #000;
+    border-radius: 10px;
+}
+
+
+.list-group-sender {
+    position: relative;
+    margin-right: auto;
+    margin-left:10px;
+    margin-bottom: 10px;
+    padding: 10px;
+    background-color: #CCFFCC;
+    width: 50%;
+    height: auto;
+    text-align: left;
+    font: 400 .9em 'Open Sans', sans-serif;
+    border: 1px solid #00CD00;
+    border-radius: 10px;
+}
+
+.list-group-sender:hover {
+  background-color: #00CD00;
+}
+
 /* ---------------------------------------------------
     Active Users list STYLE
 ----------------------------------------------------- */
