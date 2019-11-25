@@ -8,6 +8,7 @@ app.config["SECRET_KEY"] = os.getenv("SECRET_KEY")
 socketio = SocketIO(app)
 
 USERS = {} #this will be a dictionary of the following pairs :::: {username : socket_id}
+ROOMS = {} #this dictionary will be the following pairs :::: {Room_id : [members in the room]}
 
 @app.route("/")#we will make the url extension have the random hex number
 def index():
@@ -15,6 +16,7 @@ def index():
 
 @socketio.on('userdata')
 def user_data(data):
+    #the userdata that will come in will be username and room_id
     if 'username' in data:
         username = data['username']
         USERS[username] = request.sid #request socket ID

@@ -6,7 +6,7 @@ var socket;
 
 let bootstrap_colours = ["primary","secondary", "success", "danger", "warning", "info"];
 
-const init = username => {
+const init = (username,room_id) => {
 
   //after the username is entered, lets start the socket
   socket = io.connect(
@@ -16,7 +16,7 @@ const init = username => {
 
   socket.on("connect", () => {
 
-    socket.emit("userdata", { username }); // let the server know what the user's name is
+    socket.emit("userdata", { username,room_id }); // let the server know what the user's name is
     socket.emit("get users");
 
     socket.on("new user", data => {
@@ -65,7 +65,36 @@ const init = username => {
 
 
 
+const get_session_room = () => {
+  let room_id = localStorage.getItem("room_id");
 
+  if (!room_id){
+    //open the modal for the user to enter the room id or just to practise solo.
+    //if they choose room id, they will go to it
+    //if they choose to practise solo, then they will have a canvas to themselves with no other users
+    $("#room_id_Modal").modal({ show: true, backdrop: "static" });
+    document.querySelector("#room_id-form").addEventListener("submit", e => {
+        e.preventDefault(); //prevents the default action from happening which is reloading the page etc
+        room_id = document.querySelector("#room_id-text").value;
+        if (typeof room_id == "string") {
+          room_id = room_id.trim(); //removes whitespace from the string
+          if (room_id == "") {
+            room_id = null;
+            $('#room_id-title-1').text("Please enter a valid Room ID");
+            $('#room_id-title-1').css('color','red');
+            //add text on the modal to let the user know they need to enter someting in the modal
+          } else {
+            localStorage.setItem("room_id", room_id);
+            $("#room_id_Modal").modal("hide");
+            init(username,room_id);
+          }
+        }
+      });
+  }else{
+    init(username,room_id);
+  }
+  }
+};
 
 
 
@@ -91,21 +120,20 @@ const get_username = () => {
         if (username == "") {
           username = null;
           $('#usernameModal-title-1').text("Please enter your username below");
+          $('#usernameModal-title-1').css('color','red');
           //add text on the modal to let the user know they need to enter someting in the modal
         } else {
           localStorage.setItem("username", username);
 
           $("#usernameModal").modal("hide");
           //set the username in local storage to make it like sessions
-
-
-          init(username);
+          get_session_room();
           //call the init function to start the app
         }
       }
     });
   } else {
-    init(username);
+    get_session_room();
   };
 };
 
@@ -115,4 +143,8 @@ function openChat() {
 
 function closeChat() {
   document.getElementById("chatRoom").style.width = "0";
+}
+
+function create_room(){
+  console.log("We are now creating your new room!!!");
 }

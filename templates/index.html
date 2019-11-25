@@ -153,6 +153,30 @@
         </div>
     </div>
 
+    <!-- This is the modal to get the username from the user.  -->
+    <div class="modal show" id="room_id_Modal" tabindex="1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="room_id-title-1">Enter your Room ID here: </h5>
+                </div>
+                <div class="modal-body">
+                    <form id="room_id-form">
+                        <input class="form-control" autocomplete="off" type="text" id="room_id-text">
+                        <hr>
+                        <button type="submit" class="btn btn-primary" style="float:right;" >Join Room</button>
+                    </form>
+                </div>
+
+                <div class="modal-footer">
+                  <p>Prefer to create your own room?</p>
+                    <button class="btn btn-success" onclick="create_room()" data-dismiss="modal">Create Room</button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
 
 
 
