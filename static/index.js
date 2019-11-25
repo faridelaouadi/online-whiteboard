@@ -67,6 +67,7 @@ const init = (username,room_id) => {
 //function to get the room_id from the user through using a modal
 const get_session_room = () => {
   let room_id = localStorage.getItem("room_id");
+  let username = localStorage.getItem("username");
 
   if (!room_id){
     //open the modal for the user to enter the room id or just to practise solo.
@@ -94,7 +95,6 @@ const get_session_room = () => {
     init(username,room_id);
   }
 };
-
 
 //function to get the username from the user through using a modal
 const get_username = () => {
