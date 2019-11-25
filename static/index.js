@@ -67,6 +67,20 @@ const init = (username,room_id) => {
 
 };
 
+function create_room(){
+  //  random hex string generator of length 16 chars
+  let room_id = randHex(16);
+  let username = localStorage.getItem("username");
+  localStorage.setItem("room_id", room_id);
+  try {
+    document.getElementById('navbar_header').innerHTML = "Room "+ room_id;
+    socket.emit("userdata", { username,room_id })
+  }
+  catch(err) {
+    document.getElementById('navbar_header').innerHTML = "Room "+ room_id;
+    init(username,room_id);
+  }
+}
 
 //function to get the room_id from the user through using a modal
 const get_session_room = () => {
@@ -155,9 +169,18 @@ function closeChat() {
   document.getElementById("chatRoom").style.width = "0";
 }
 
-function create_room(){
-  console.log("We are now creating your new room!!!");
-}
+//generate a string of hex characters of desired length
+var randHex = function(len) {
+  var maxlen = 8,
+      min = Math.pow(16,Math.min(len,maxlen)-1)
+      max = Math.pow(16,Math.min(len,maxlen)) - 1,
+      n   = Math.floor( Math.random() * (max-min+1) ) + min,
+      r   = n.toString(16);
+  while ( r.length < len ) {
+     r = r + randHex( len - maxlen );
+  }
+  return r;
+};
 
 const clear_users = () => {
   let ul = document.querySelector("#active_users_list");
