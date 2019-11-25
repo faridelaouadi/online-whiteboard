@@ -2,6 +2,7 @@ document.addEventListener("DOMContentLoaded", () => {
   get_username(); //when the user first logs in, they are prompted to enter their username
 });
 
+
 var socket;
 
 let bootstrap_colours = ["primary","secondary", "success", "danger", "warning", "info"];
@@ -23,9 +24,13 @@ const init = (username,room_id) => {
         show_user_in_list(data.username)
     });
 
+    socket.on("user left", () => {
+        socket.emit("get users");
+        //if the server tells us someone who left, we want to know who left and therefore update the user list
+    });
+
     socket.on("users", data => {
       clear_users();
-      console.log("this is the list of people in the room from the server ---> "+ data)
       for (let name of data) {
         if (name !== localStorage.getItem("username")){
           show_user_in_list(name);
@@ -150,3 +155,7 @@ const clear_users = () => {
   let ul = document.querySelector("#active_users_list");
   ul.innerHTML = "";
 };
+
+function leaveRoom(){
+  socket.emit("leave room");
+}

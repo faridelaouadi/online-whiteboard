@@ -8,7 +8,7 @@ app.config["SECRET_KEY"] = os.getenv("SECRET_KEY")
 socketio = SocketIO(app)
 
 USERS = {} #this will be a dictionary of the following pairs :::: {socket_id : [username,room_id]}
-USER_SOCKET_MAPPING = {}
+USER_SOCKET_MAPPING = {} # {username:socketid}
 
 
 @app.route("/")#we will make the url extension have the random hex number
@@ -47,6 +47,7 @@ def get_users():
     for key in USERS:
         if room == USERS[key][1]:
             users.append(USERS[key][0])
+    print(f"the list of users sent are -------------------> {users}")
     emit('users', users , room=room)
 
 @socketio.on('undo')
@@ -54,7 +55,13 @@ def undo():
     room = USERS[request.sid][1]
     emit('undo', room=room)
 
-
+@socketio.on('leave room')
+def exit_room():
+    room = USERS[request.sid][1]
+    username = USERS[request.sid][0]
+    USERS[request.sid] = [username, ""]
+    leave_room(room) #user has now left the room
+    emit('user left' , room=room)
 
 
 if __name__ == "__main__":
