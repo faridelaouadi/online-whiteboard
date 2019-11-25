@@ -21,12 +21,15 @@ def user_data(data):
     if 'username' in data:
         username = data['username']
         room = data['room_id']
+        try:
+            del USERS[USER_SOCKET_MAPPING[username]] #try remove the previous
+        except:
+            print("This is a fresh user")
+        finally:
+            USER_SOCKET_MAPPING[username] = request.sid
         USERS[request.sid] = [username,room] #new socket assigned to the user
-        #lets remove the old one and then assign the new one to the user sockeyt mappung
-        if username in USER_SOCKET_MAPPING:
-            del USERS[USER_SOCKET_MAPPING[username]]
-        USER_SOCKET_MAPPING[username] = request.sid
         join_room(room) #the user joins the room
+        print(f"Users in the system are ::::::::: {USERS}")
         emit('new user', data, room=room)
 
 @socketio.on('new action')
@@ -47,7 +50,6 @@ def get_users():
     for key in USERS:
         if room == USERS[key][1]:
             users.append(USERS[key][0])
-    print(f"the list of users sent are -------------------> {users}")
     emit('users', users , room=room)
 
 @socketio.on('undo')
@@ -58,8 +60,6 @@ def undo():
 @socketio.on('leave room')
 def exit_room():
     room = USERS[request.sid][1]
-    username = USERS[request.sid][0]
-    USERS[request.sid] = [username, ""]
     leave_room(room) #user has now left the room
     emit('user left' , room=room)
 

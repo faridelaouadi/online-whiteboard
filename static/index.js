@@ -47,7 +47,6 @@ const init = (username,room_id) => {
     })
 
     socket.on("clear canvas", () => {
-      //see how youre going to do the color and thickeness
       clear_canvas();
     })
 
@@ -92,11 +91,20 @@ const get_session_room = () => {
           } else {
             localStorage.setItem("room_id", room_id);
             $("#room_id_Modal").modal("hide");
-            init(username,room_id);
+            try {
+              document.getElementById('navbar_header').innerHTML = "Room "+ room_id;
+              socket.emit("userdata", { username,room_id })
+            }
+            catch(err) {
+              document.getElementById('navbar_header').innerHTML = "Room "+ room_id;
+              init(username,room_id);
+            }
           }
         }
       });
   }else{
+    //the user will not reach here if they have left a room.
+    document.getElementById('navbar_header').innerHTML = "Room "+ room_id;
     init(username,room_id);
   }
 };
@@ -157,5 +165,8 @@ const clear_users = () => {
 };
 
 function leaveRoom(){
+  localStorage.removeItem("room_id");
+  clear_canvas();
   socket.emit("leave room");
+  get_session_room()
 }
