@@ -186,6 +186,7 @@ const get_session_room = () => {
             localStorage.setItem("room_id", room_id);
             $("#room_id_Modal").modal("hide");
             try {
+              //this will happen if the socket was already created and the user just left the previous room and enters a new one.
               document.getElementById('navbar_header').innerHTML = "Room ID: "+ room_id;
               socket.emit("userdata", { username,room_id })
             }
