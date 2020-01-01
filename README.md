@@ -1,5 +1,7 @@
 # Online Collab whiteboard
 
+![](whiteboard.png)
+
 Project description
 ----
 
